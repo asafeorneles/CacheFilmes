@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "tb_seatReservations")
+@Table(name = "tb_seat_reservations")
 public class SeatReservation {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -21,8 +21,10 @@ public class SeatReservation {
     private UUID seatReservationId;
 
     @ManyToOne
+    @JoinColumn(name = "reservation_id", nullable = false)
     private Reservation reservation;
 
     @ManyToOne
-    Seat seat;
+    @JoinColumn(name = "seat_id", nullable = false)
+    private Seat seat;
 }

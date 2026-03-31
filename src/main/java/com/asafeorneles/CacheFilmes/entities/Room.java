@@ -23,8 +23,12 @@ public class Room {
 
     @Column(name = "room_name")
     private String roomName;
-    private int rows;
-    private int columns;
+
+    @Column(name = "row_quantity")
+    private int rowsQuantity;
+    @Column(name = "column_quantity")
+    private int columnsQuantity;
+
     @OneToMany(mappedBy = "room")
     private List<Seat> seats;
 }

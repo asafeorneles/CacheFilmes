@@ -14,7 +14,7 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "tb_seats", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"room_id", "row", "column"})
+        @UniqueConstraint(columnNames = {"room_id", "seat_row", "seat_column"})
 })
 public class Seat {
     @Id
@@ -24,10 +24,14 @@ public class Seat {
 
     @Column(name = "seat_name")
     private String seatName;
-    private String row;
-    private String column;
+
+    @Column(name = "seat_row")
+    private int rowNumber;
+
+    @Column(name = "seat_column")
+    private int columnNumber;
 
     @ManyToOne
-    @JoinColumn(name = "room_dd")
+    @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 }

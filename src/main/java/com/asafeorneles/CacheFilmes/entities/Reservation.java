@@ -24,12 +24,14 @@ public class Reservation {
     private UUID reservationId;
 
     @OneToMany(mappedBy = "reservation")
-    private List<SeatReservation> seatReservation;
+    private List<SeatReservation> seatReservations;
 
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
 
     @Column(name = "reservation_date")
     private LocalDateTime reservationDate;
+
+    @Column(name = "expiration_time")
     private LocalDateTime expiresAt; // Tempo até o usuário realizar o pagamento.
 }
