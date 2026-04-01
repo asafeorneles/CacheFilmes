@@ -21,14 +21,14 @@ public class Room {
     @Column(name = "room_id")
     private UUID roomId;
 
-    @Column(name = "room_name")
-    private String roomName;
+    private String name;
 
-    @Column(name = "row_quantity")
+    @Column(name = "rows_quantity")
     private int rowsQuantity;
-    @Column(name = "column_quantity")
+
+    @Column(name = "columns_quantity")
     private int columnsQuantity;
 
-    @OneToMany(mappedBy = "room")
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Seat> seats;
 }

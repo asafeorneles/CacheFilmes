@@ -2,9 +2,9 @@
 CREATE TABLE tb_rooms
 (
     room_id         BINARY(16) PRIMARY KEY,
-    room_name       VARCHAR(255) NOT NULL,
-    row_quantity    INT          NOT NULL,
-    column_quantity INT          NOT NULL
+    name       VARCHAR(255) NOT NULL,
+    rows_quantity    INT          NOT NULL,
+    columns_quantity INT          NOT NULL
 );
 
 -- Tabela de filmes
@@ -39,7 +39,7 @@ CREATE TABLE tb_sessions
 CREATE TABLE tb_seats
 (
     seat_id     BINARY(16) PRIMARY KEY,
-    seat_name   VARCHAR(255) NOT NULL,
+    name        VARCHAR(255) NOT NULL,
     seat_row    INT          NOT NULL,
     seat_column INT          NOT NULL,
     room_id     BINARY(16) NOT NULL,
