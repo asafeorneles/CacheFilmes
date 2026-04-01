@@ -23,8 +23,9 @@ public class Reservation {
     @Column(name = "reservation_id")
     private UUID reservationId;
 
-    @OneToMany(mappedBy = "reservation")
-    private List<SeatReservation> seatReservations;
+    @ManyToOne
+    @JoinColumn(name = "session_id", nullable = false)
+    private Session session;
 
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
@@ -34,4 +35,7 @@ public class Reservation {
 
     @Column(name = "expiration_time")
     private LocalDateTime expiresAt; // Tempo até o usuário realizar o pagamento.
+
+    @OneToMany(mappedBy = "reservation")
+    private List<SeatReservation> seatReservations;
 }
