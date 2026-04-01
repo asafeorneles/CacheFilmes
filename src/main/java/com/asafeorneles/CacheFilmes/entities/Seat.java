@@ -22,8 +22,7 @@ public class Seat {
     @Column(name = "seat_id")
     private UUID seatId;
 
-    @Column(name = "seat_name")
-    private String seatName;
+    private String name;
 
     @Column(name = "seat_row")
     private int rowNumber;
@@ -34,4 +33,12 @@ public class Seat {
     @ManyToOne
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
+
+    public String getColumnLetter() {
+        return String.valueOf((char) ('A' + columnNumber - 1));
+    }
+
+    public String getSeatName() {
+        return getColumnLetter() + rowNumber;
+    }
 }
