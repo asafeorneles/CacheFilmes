@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record SessionResponse(
+        UUID sessionId,
         UUID movieId,
         String movieName,
         UUID roomId,

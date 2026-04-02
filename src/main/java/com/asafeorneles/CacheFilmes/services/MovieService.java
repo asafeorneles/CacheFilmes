@@ -50,6 +50,7 @@ public class MovieService {
                         movie.getSessions()
                                 .stream()
                                 .map(session -> new SessionResponse(
+                                                session.getSessionId(),
                                                 movie.getMovieId(),
                                                 movie.getName(),
                                                 session.getRoom().getRoomId(),

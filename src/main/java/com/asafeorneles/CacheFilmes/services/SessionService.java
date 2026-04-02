@@ -46,6 +46,7 @@ public class SessionService {
         sessionRepository.save(session);
 
         return new SessionResponse(
+                session.getSessionId(),
                 movie.getMovieId(),
                 movie.getName(),
                 room.getRoomId(),
