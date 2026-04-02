@@ -1,6 +1,7 @@
 package com.asafeorneles.CacheFilmes.controllers;
 
 import com.asafeorneles.CacheFilmes.dtos.MovieRequest;
+import com.asafeorneles.CacheFilmes.dtos.MovieResponse;
 import com.asafeorneles.CacheFilmes.entities.Movie;
 import com.asafeorneles.CacheFilmes.services.MovieService;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +20,14 @@ public class MovieController {
     private final MovieService movieService;
 
     @PostMapping
-    public ResponseEntity<Movie> create(@RequestBody MovieRequest movieRequest){
-        Movie movie = movieService.create(movieRequest);
+    public ResponseEntity<MovieResponse> create(@RequestBody MovieRequest movieRequest){
+        MovieResponse movie = movieService.create(movieRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(movie);
     }
 
     @GetMapping
-    public ResponseEntity<List<Movie>> listAll(){
-        List<Movie> movies = movieService.listAll();
+    public ResponseEntity<List<MovieResponse>> listAll(){
+        List<MovieResponse> movies = movieService.listAll();
         return ResponseEntity.status(HttpStatus.OK).body(movies);
     }
 

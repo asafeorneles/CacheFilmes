@@ -1,6 +1,8 @@
 package com.asafeorneles.CacheFilmes.services;
 
 import com.asafeorneles.CacheFilmes.dtos.MovieRequest;
+import com.asafeorneles.CacheFilmes.dtos.MovieResponse;
+import com.asafeorneles.CacheFilmes.dtos.SessionResponse;
 import com.asafeorneles.CacheFilmes.entities.Movie;
 import com.asafeorneles.CacheFilmes.repositories.MovieRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +18,7 @@ import java.util.UUID;
 public class MovieService {
     private final MovieRepository movieRepository;
 
-    public Movie create(MovieRequest movieRequest){
+    public MovieResponse create(MovieRequest movieRequest) {
         Movie movie = Movie.builder()
                 .name(movieRequest.name())
                 .duration(movieRequest.duration())
@@ -24,12 +26,42 @@ public class MovieService {
                 .movieAgeRating(movieRequest.movieAgeRating())
                 .build();
 
-        return movieRepository.save(movie);
+        movieRepository.save(movie);
+        return new MovieResponse(
+                movie.getMovieId(),
+                movie.getName(),
+                movie.getDuration(),
+                movie.getMovieGenre(),
+                movie.getMovieAgeRating(),
+                null
+        );
     }
 
 
-    public List<Movie> listAll() {
-        return movieRepository.findAll();
+    public List<MovieResponse> listAll() {
+        return movieRepository.findAll()
+                .stream()
+                .map(movie -> new MovieResponse(
+                        movie.getMovieId(),
+                        movie.getName(),
+                        movie.getDuration(),
+                        movie.getMovieGenre(),
+                        movie.getMovieAgeRating(),
+                        movie.getSessions()
+                                .stream()
+                                .map(session -> new SessionResponse(
+                                                movie.getMovieId(),
+                                                movie.getName(),
+                                                session.getRoom().getRoomId(),
+                                                session.getRoom().getName(),
+                                                session.getStartTime(),
+                                                session.getEndTime(),
+                                                session.getSessionType(),
+                                                session.getSessionFormat()
+                                        )
+                                )
+                                .toList()
+                )).toList();
     }
 
     public void delete(UUID id) {
