@@ -29,6 +29,6 @@ public class Room {
     @Column(name = "columns_quantity")
     private int columnsQuantity;
 
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Seat> seats;
 }
