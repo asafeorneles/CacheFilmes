@@ -7,10 +7,7 @@ import com.asafeorneles.CacheFilmes.repositories.SeatRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -67,11 +64,10 @@ public class SeatService {
 
     public List<SeatResponse> createSeatsResponse(List<Seat> seats) {
 
-        return seats.stream()
-                .map(seat -> new SeatResponse(
-                        seat.getSeatId(), seat.getSeatName(), seat.getRowNumber(), seat.getColumnNumber())
-                )
-                .toList();
 
+        return seats.stream()
+                .map(seat -> new SeatResponse(seat.getSeatName()))
+                .sorted(Comparator.comparing(SeatResponse::name))
+                .toList();
     }
 }
