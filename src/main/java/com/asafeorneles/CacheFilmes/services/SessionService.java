@@ -11,6 +11,7 @@ import com.asafeorneles.CacheFilmes.repositories.SessionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -20,10 +21,12 @@ public class SessionService {
     private final MovieRepository movieRepository;
     private final RoomRepository roomRepository;
 
+    @Transactional
     public SessionResponse create(SessionRequest sessionRequest) {
 
         // Verificar se a data de inicio da sessão é depois de hoje
         // Verificar se a hora de término da sessão é maior do que o início + a duração do filme...
+        // regra pra evitar duas sessões na mesma sala e no mesmo horário
 
         Movie movie = movieRepository.findById(sessionRequest.movieId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
@@ -42,10 +45,15 @@ public class SessionService {
 
         sessionRepository.save(session);
 
-
-
-        return new SessionResponse(session.getMovie().getMovieId(), session.getMovie().getName(),
-                session.getRoom().getRoomId(), session.getRoom().getName(), session.getStartTime()
-                , session.getEndTime(), session.getSessionType(), session.getSessionFormat());
+        return new SessionResponse(
+                movie.getMovieId(),
+                movie.getName(),
+                room.getRoomId(),
+                room.getName(),
+                session.getStartTime(),
+                session.getEndTime(),
+                session.getSessionType(),
+                session.getSessionFormat()
+        );
     }
 }
