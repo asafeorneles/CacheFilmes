@@ -81,6 +81,7 @@ public class ReservationService {
     private static List<Seat> getSeatsByName(Room room, List<String> seatsName, SeatRepository seatRepository){
         List<Seat> seatsByName = new ArrayList<>();
         for(String seatName : seatsName){
+            // Mais seguro o back end obter pelo numero da coluna e da linha
             int rowNumber = SeatMapper.getRowNumber(seatName);
             int columnNumber = SeatMapper.getColumnNumber(seatName);
             Seat seat = seatRepository.findByRowNumberAndColumnNumberAndRoom_RoomId(rowNumber, columnNumber, room.getRoomId())
