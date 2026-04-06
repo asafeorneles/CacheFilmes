@@ -1,12 +1,12 @@
 package com.asafeorneles.CacheFilmes.services;
 
+import com.asafeorneles.CacheFilmes.dtos.SeatReservationResponse;
 import com.asafeorneles.CacheFilmes.dtos.SessionRequest;
 import com.asafeorneles.CacheFilmes.dtos.SessionResponse;
-import com.asafeorneles.CacheFilmes.entities.Movie;
-import com.asafeorneles.CacheFilmes.entities.Room;
-import com.asafeorneles.CacheFilmes.entities.Session;
+import com.asafeorneles.CacheFilmes.entities.*;
 import com.asafeorneles.CacheFilmes.repositories.MovieRepository;
 import com.asafeorneles.CacheFilmes.repositories.RoomRepository;
+import com.asafeorneles.CacheFilmes.repositories.SeatReservationRepository;
 import com.asafeorneles.CacheFilmes.repositories.SessionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,14 +24,16 @@ public class SessionService {
     private final SessionRepository sessionRepository;
     private final MovieRepository movieRepository;
     private final RoomRepository roomRepository;
+    private final SeatReservationService seatReservationService;
+    private final SeatReservationRepository seatReservationRepository;
 
     @Transactional
     public SessionResponse create(SessionRequest sessionRequest) {
 
-        // Verificar se a data de inicio da sessão é depois de hoje
+        // Verificar se a data de início da sessão é depois de hoje
         // Verificar se a hora de término da sessão é maior do que o início + a duração do filme...
-        // regra pra evitar duas sessões na mesma sala e no mesmo horário
-        // Talvez marcar a sessão como finalizada e criar métodos pra verificar isso...
+        // regra para evitar duas sessões na mesma sala e no mesmo horário
+        // Talvez marcar a sessão como finalizada e criar métodos para verificar isso...
 
         Movie movie = movieRepository.findById(sessionRequest.movieId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
@@ -48,6 +51,15 @@ public class SessionService {
                 .build();
 
         sessionRepository.save(session);
+
+        // Pega os assentos da sala da sessão
+        List<Seat> seats = room.getSeats();
+
+        // Cria as SeatReservation
+        List<SeatReservation> seatReservations = seatReservationService.create(seats, session);
+
+        // Seta as SeatReservation na sessão criada
+        session.setSeatReservations(seatReservations);
 
         return new SessionResponse(
                 session.getSessionId(),
@@ -100,6 +112,23 @@ public class SessionService {
                         session.getSessionFormat().getFormat()))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
+    }
 
+    public List<SeatReservationResponse> listSeatsByRoom(UUID id) {
+        Session session = sessionRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+        return seatReservationRepository.findBySession(session)
+                .stream()
+                .map(sr -> new SeatReservationResponse(
+                        sr.getSeat().getSeatId(),
+                        sr.getSeat().getSeatName(),
+                        sr.getSeat().getRowNumber(),
+                        sr.getSeat().getColumnNumber(),
+                        sr.getSeat().getRoom().getRoomId(),
+                        session.getSessionId(),
+                        sr.getStatus().name()
+                ))
+                .sorted(Comparator.comparing(SeatReservationResponse::name))
+                .toList();
     }
 }

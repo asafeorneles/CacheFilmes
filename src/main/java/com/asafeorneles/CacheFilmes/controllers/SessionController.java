@@ -1,5 +1,6 @@
 package com.asafeorneles.CacheFilmes.controllers;
 
+import com.asafeorneles.CacheFilmes.dtos.SeatReservationResponse;
 import com.asafeorneles.CacheFilmes.dtos.SeatResponse;
 import com.asafeorneles.CacheFilmes.dtos.SessionRequest;
 import com.asafeorneles.CacheFilmes.dtos.SessionResponse;
@@ -35,6 +36,12 @@ public class SessionController {
     public ResponseEntity<SessionResponse> listById(@PathVariable(name = "id") UUID id){
         SessionResponse sessionResponse = sessionService.listById(id);
         return ResponseEntity.status(HttpStatus.OK).body(sessionResponse);
+    }
+
+    @GetMapping(path = "/{id}/seats")
+    public ResponseEntity<List<SeatReservationResponse>> listSeatsByRoom(@PathVariable(name = "id") UUID id){
+        List<SeatReservationResponse> seatReservationResponses = sessionService.listSeatsByRoom(id);
+        return ResponseEntity.status(HttpStatus.OK).body(seatReservationResponses);
     }
 
     @DeleteMapping(path = "/{id}")

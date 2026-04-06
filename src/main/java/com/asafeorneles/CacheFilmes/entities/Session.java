@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -45,4 +46,7 @@ public class Session {
     @Column(name = "session_format")
     @Enumerated(EnumType.STRING)
     private SessionFormat sessionFormat;
+
+    @OneToMany(mappedBy = "session", fetch = FetchType.LAZY)
+    List<SeatReservation> seatReservations;
 }
