@@ -13,11 +13,12 @@ API desenvolvida em Java com Spring Boot para controle e reserva de assentos de 
 - Docker
 
 ## 🧾 Funcionalidades
-- Cadastro de filmes e categorização de gênero
-- Cadastro de salas de cinema e assentos
-- Criação de sessões para os filmes
-- Criação de reservas de assentos por sessão
-- Controle de assentos disponíveis, reservados e ocupados 
+- [x] Cadastro de filmes e categorização de gênero
+- [x] Cadastro de salas de cinema e assentos
+- [x] Criação de sessões para os filmes
+- [x] Criação de reservas de assentos por sessão
+- [x] Controle de assentos disponíveis, reservados e ocupados
+- [ ] Controle de concorrência utilizando Redis
 
 ## 🧱 Arquitetura e Boas Práticas
 - Arquitetura em camadas:
