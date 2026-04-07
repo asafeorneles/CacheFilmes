@@ -4,11 +4,10 @@ import com.asafeorneles.CacheFilmes.dtos.MovieRequest;
 import com.asafeorneles.CacheFilmes.dtos.MovieResponse;
 import com.asafeorneles.CacheFilmes.dtos.SessionResponse;
 import com.asafeorneles.CacheFilmes.entities.Movie;
+import com.asafeorneles.CacheFilmes.exeptions.ResourceNotFoundExceptions;
 import com.asafeorneles.CacheFilmes.repositories.MovieRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -67,7 +66,8 @@ public class MovieService {
 
     public void delete(UUID id) {
         Movie movie = movieRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new ResourceNotFoundExceptions(
+                        "Movie not found by this id: " + id, null));
 
         movieRepository.delete(movie);
     }

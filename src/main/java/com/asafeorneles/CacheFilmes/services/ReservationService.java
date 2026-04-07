@@ -5,15 +5,14 @@ import com.asafeorneles.CacheFilmes.dtos.ReservationResponse;
 import com.asafeorneles.CacheFilmes.dtos.SessionResponse;
 import com.asafeorneles.CacheFilmes.entities.*;
 import com.asafeorneles.CacheFilmes.enums.ReservationStatus;
+import com.asafeorneles.CacheFilmes.exeptions.ResourceNotFoundExceptions;
 import com.asafeorneles.CacheFilmes.repositories.ReservationRepository;
 import com.asafeorneles.CacheFilmes.repositories.SeatRepository;
 import com.asafeorneles.CacheFilmes.repositories.SessionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,7 +31,8 @@ public class ReservationService {
     @Transactional
     public ReservationResponse create(ReservationRequest reservationRequest) {
         Session session = sessionRepository.findById(reservationRequest.sessionId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new ResourceNotFoundExceptions(
+                        "Session not found by this id: " + reservationRequest.sessionId(), null));
 
         Room room = session.getRoom();
 
@@ -86,7 +86,8 @@ public class ReservationService {
             int rowNumber = SeatMapper.getRowNumber(seatName);
             int columnNumber = SeatMapper.getColumnNumber(seatName);
             Seat seat = seatRepository.findByRowNumberAndColumnNumberAndRoom_RoomId(rowNumber, columnNumber, room.getRoomId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+                    .orElseThrow(() -> new ResourceNotFoundExceptions(
+                            "Seat not found or not exist. Seat name: " + seatName, null));
             seatsByName.add(seat);
         }
         return seatsByName;

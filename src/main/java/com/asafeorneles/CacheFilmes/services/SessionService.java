@@ -4,6 +4,7 @@ import com.asafeorneles.CacheFilmes.dtos.SeatReservationResponse;
 import com.asafeorneles.CacheFilmes.dtos.SessionRequest;
 import com.asafeorneles.CacheFilmes.dtos.SessionResponse;
 import com.asafeorneles.CacheFilmes.entities.*;
+import com.asafeorneles.CacheFilmes.exeptions.ResourceNotFoundExceptions;
 import com.asafeorneles.CacheFilmes.repositories.MovieRepository;
 import com.asafeorneles.CacheFilmes.repositories.RoomRepository;
 import com.asafeorneles.CacheFilmes.repositories.SeatReservationRepository;
@@ -36,10 +37,12 @@ public class SessionService {
         // Talvez marcar a sessão como finalizada e criar métodos para verificar isso...
 
         Movie movie = movieRepository.findById(sessionRequest.movieId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new ResourceNotFoundExceptions(
+                        "Movie not found by this id: " + sessionRequest.movieId(), null));
 
         Room room = roomRepository.findById(sessionRequest.roomId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new ResourceNotFoundExceptions(
+                        "Room not found by this id: " + sessionRequest.roomId(), null));
 
         Session session = Session.builder()
                 .movie(movie)
@@ -94,7 +97,8 @@ public class SessionService {
 
     public void delete(UUID id) {
         Session session = sessionRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new ResourceNotFoundExceptions(
+                        "Session not found by this id: " + id, null));
         sessionRepository.delete(session);
     }
 
@@ -110,13 +114,15 @@ public class SessionService {
                         session.getEndTime(),
                         session.getSessionType(),
                         session.getSessionFormat().getFormat()))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new ResourceNotFoundExceptions(
+                        "Session not found by this id: " + id, null));
 
     }
 
     public List<SeatReservationResponse> listSeatsByRoom(UUID id) {
         Session session = sessionRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+                .orElseThrow(() -> new ResourceNotFoundExceptions(
+                        "Session not found by this id: " + id, null));
         return seatReservationRepository.findBySession(session)
                 .stream()
                 .map(sr -> new SeatReservationResponse(

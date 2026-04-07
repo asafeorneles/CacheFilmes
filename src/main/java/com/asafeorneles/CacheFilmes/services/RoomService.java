@@ -16,7 +16,6 @@ public class RoomService {
 
     private final RoomRepository roomRepository;
     private final SeatService seatService;
-    private final SeatRepository seatRepository;
 
     public RoomResponse create(RoomRequest roomRequest) {
         Room room = Room.builder()

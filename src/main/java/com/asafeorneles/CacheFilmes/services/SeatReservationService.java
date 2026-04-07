@@ -5,6 +5,9 @@ import com.asafeorneles.CacheFilmes.entities.Seat;
 import com.asafeorneles.CacheFilmes.entities.SeatReservation;
 import com.asafeorneles.CacheFilmes.entities.Session;
 import com.asafeorneles.CacheFilmes.enums.SeatStatus;
+import com.asafeorneles.CacheFilmes.exeptions.ConflictBusinessException;
+import com.asafeorneles.CacheFilmes.exeptions.ResourceNotFoundExceptions;
+import com.asafeorneles.CacheFilmes.repositories.SeatRepository;
 import com.asafeorneles.CacheFilmes.repositories.SeatReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +22,7 @@ import java.util.List;
 public class SeatReservationService {
 
     private final SeatReservationRepository seatReservationRepository;
+    private final SeatRepository seatRepository;
 
     public List<SeatReservation> create(List<Seat> seats, Session session) {
 
@@ -44,7 +48,9 @@ public class SeatReservationService {
 
         for (Seat seat : seats) {
             SeatReservation seatReservation = seatReservationRepository.findBySeatAndSession(seat, session)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+                    .orElseThrow(() -> new ResourceNotFoundExceptions("SeatReservation not found.",
+                            "SeatReservation not found by this seat: " + seat.getSeatId() +
+                            " and this session: " + session.getSessionId() + " in makeReservation method."));
             seatReservation.setStatus(SeatStatus.RESERVED); // Ainda não pagou, portanto, vai ficar reservada por alguns minutos
             seatReservation.setReservation(reservation);
             seatReservations.add(seatReservation);
@@ -57,10 +63,13 @@ public class SeatReservationService {
         for (Seat seat : seats) {
 
             SeatReservation seatReservation = seatReservationRepository.findBySeatAndSession(seat, session)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+                    .orElseThrow(() -> new ResourceNotFoundExceptions("SeatReservation not found.",
+                            "SeatReservation not found by this seat: " + seat.getSeatId() +
+                            " and this session: " + session.getSessionId() + " in verifyStatus method."));
 
             if (seatReservation.getStatus() == SeatStatus.RESERVED || seatReservation.getStatus() == SeatStatus.OCCUPIED) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Assento já está reservado");
+                throw new ConflictBusinessException(
+                        "seat already occupied or reserved. Please, choose other seat.", null);
             }
         }
     }
