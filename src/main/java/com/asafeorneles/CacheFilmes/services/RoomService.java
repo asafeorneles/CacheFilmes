@@ -4,7 +4,6 @@ import com.asafeorneles.CacheFilmes.dtos.RoomRequest;
 import com.asafeorneles.CacheFilmes.dtos.RoomResponse;
 import com.asafeorneles.CacheFilmes.entities.Room;
 import com.asafeorneles.CacheFilmes.repositories.RoomRepository;
-import com.asafeorneles.CacheFilmes.repositories.SeatRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

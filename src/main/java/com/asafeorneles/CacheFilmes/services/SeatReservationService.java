@@ -10,9 +10,7 @@ import com.asafeorneles.CacheFilmes.exeptions.ResourceNotFoundExceptions;
 import com.asafeorneles.CacheFilmes.repositories.SeatRepository;
 import com.asafeorneles.CacheFilmes.repositories.SeatReservationRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
